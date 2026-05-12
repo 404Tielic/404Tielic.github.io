@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hugo Sealtiel Argumedo Lugo | Proceso a Ingeniero</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Montserrat:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* Estilos de respaldo por si el CSS externo falla */
+        #theme-toggle {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: #4f46e5;
+            color: white;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            z-index: 2000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .theme-icon {
+            width: 30px;
+            height: 30px;
+        }
+
+        /* ── HAMBURGER BUTTON ── */
+        #hamburger-btn {
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            gap: 5px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0.5rem;
+            z-index: 1100;
+        }
+        #hamburger-btn span {
+            display: block;
+            width: 26px;
+            height: 2px;
+            background: var(--text-main, #0f172a);
+            border-radius: 2px;
+            transition: all 0.3s ease;
+            transform-origin: center;
+        }
+        #hamburger-btn.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+        #hamburger-btn.open span:nth-child(2) { opacity: 0; }
+        #hamburger-btn.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+        @media (max-width: 768px) {
+            #hamburger-btn { display: flex; }
+
+            #nav-menu {
+                display: none;
+                flex-direction: column;
+                gap: 0 !important;
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100vh;
+                background: var(--surface-color, #fff);
+                padding: 100px 2rem 2rem;
+                z-index: 1050;
+                box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+            }
+            #nav-menu.open { display: flex; }
+            #nav-menu li { border-bottom: 1px solid var(--border-color, #e2e8f0); }
+            #nav-menu a { display: block; padding: 1.2rem 0; font-size: 1.2rem; }
+        }
+
+        /* ── FORM ERROR MESSAGES ── */
+        .field-error {
+            display: none;
+            color: #e53e3e;
+            font-size: 0.82rem;
+            margin-top: 0.4rem;
+            padding: 0.4rem 0.8rem;
+            background: rgba(229,62,62,0.08);
+            border-left: 3px solid #e53e3e;
+            border-radius: 0 8px 8px 0;
+        }
+        .field-error.visible { display: block; }
+        .form-success {
+            display: none;
+            text-align: center;
+            padding: 1.5rem;
+            background: rgba(16,185,129,0.1);
+            border: 1px solid rgba(16,185,129,0.3);
+            border-radius: 16px;
+            color: #059669;
+            font-weight: 600;
+            margin-top: 1rem;
+        }
+        .form-success.visible { display: block; }
+        input.input-error, textarea.input-error {
+            border-color: #e53e3e !important;
+            box-shadow: 0 0 0 3px rgba(229,62,62,0.15) !important;
+        }
+
+        /* ── DEFINITION LIST ── */
+        .tech-dl {
+            display: grid;
+            grid-template-columns: auto 1fr;
+            gap: 0.6rem 1.2rem;
+            margin-top: 1.5rem;
+        }
+        .tech-dl dt {
+            font-weight: 700;
+            color: var(--accent-color, #4f46e5);
+            padding: 0.3rem 0;
+            white-space: nowrap;
+        }
+        .tech-dl dd {
+            color: var(--text-muted, #475569);
+            padding: 0.3rem 0;
+            border-bottom: 1px solid var(--border-color, #e2e8f0);
+        }
+
+        /* ── ORDERED LIST (Education) ── */
+        .edu-ol {
+            list-style: none;
+            counter-reset: edu-counter;
+            margin-top: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        .edu-ol li {
+            counter-increment: edu-counter;
+            display: flex;
+            gap: 1rem;
+            align-items: flex-start;
+        }
+        .edu-ol li::before {
+            content: counter(edu-counter);
+            min-width: 36px;
+            height: 36px;
+            background: var(--accent-color, #4f46e5);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.85rem;
+            flex-shrink: 0;
+        }
+        .edu-ol li div { padding-top: 0.3rem; }
+        .edu-ol li strong { display: block; color: var(--text-main); }
+        .edu-ol li span { font-size: 0.9rem; color: var(--text-muted); }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="container header-content">
+            <div id="branding">
+                <h1 class="logo-name">Hugo Argumedo</h1>
+                <p class="logo-title">Ingeniero en Sistemas Electrónicos</p>
+            </div>
+            <nav>
+                <!-- ✅ ETAPA 1: Lista desordenada para navegación -->
+                <ul id="nav-menu">
+                    <li><a href="#about">Sobre Mí</a></li>
+                    <li><a href="#experience">Trayectoria</a></li>
+                    <li><a href="#skills">Habilidades</a></li>
+                    <li><a href="#projects">Proyectos</a></li>
+                    <li><a href="#contact">Contacto</a></li>
+                </ul>
+            </nav>
+            <!-- ✅ ETAPA 3: Botón hamburguesa para móvil -->
+            <button id="hamburger-btn" aria-label="Abrir menú" aria-expanded="false" aria-controls="nav-menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </header>
+
+    <main>
+        <section id="hero">
+            <div class="container hero-content">
+                <h1 class="hero-title">Conectando Hardware, Software e IA</h1>
+                <p class="hero-subtitle">Soluciones inteligentes en automatización y desarrollo móvil con enfoque en sistemas embebidos.</p>
+                <div class="hero-actions">
+                    <a href="#projects" class="cta-button primary">Ver Proyectos</a>
+                    <a href="#contact" class="cta-button secondary">Contactar</a>
+                </div>
+            </div>
+        </section>
+
+        <section id="about" class="section-block">
+            <div class="container">
+                <div class="card">
+                    <div class="about-grid">
+                        <div class="profile-frame">
+                            <img src="perfil2.jpeg" alt="Hugo Argumedo" class="profile-pic">
+                        </div>
+                        <div class="about-text">
+                            <h2>Sobre Mí</h2>
+                            <p>Soy estudiante de 8º semestre de <strong>Ingeniería en Sistemas Electrónicos Inteligentes</strong>. Mi especialidad es la convergencia entre hardware y software, resolviendo problemas complejos desde la lógica de circuitos hasta aplicaciones móviles intuitivas.</p>
+
+                            <!-- ✅ ETAPA 1: Lista de definición (dl) para tecnologías -->
+                            <h3 style="margin-top:2rem; margin-bottom:0.5rem; font-size:1.1rem;">Tecnologías Dominadas</h3>
+                            <dl class="tech-dl">
+                                <dt>Frontend</dt>
+                                <dd>HTML5, CSS3, JavaScript</dd>
+                                <dt>Backend</dt>
+                                <dd>Java, Python, C/C++</dd>
+                                <dt>Móvil</dt>
+                                <dd>Android Nativo (Java)</dd>
+                                <dt>Sistemas</dt>
+                                <dd>PLCs, Automatización Industrial</dd>
+                                <dt>IA / ML</dt>
+                                <dd>Fundamentos de Machine Learning</dd>
+                                <dt>Diseño</dt>
+                                <dd>After Effects, Diseño Gráfico</dd>
+                            </dl>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="experience" class="section-block">
+            <div class="container">
+                <h2 class="section-title">Trayectoria Académica</h2>
+
+                <!-- ✅ ETAPA 1: Lista ordenada (ol) para historial educativo -->
+                <div class="card" style="margin-bottom: 2rem;">
+                    <h3 style="margin-bottom:0.5rem; color: var(--accent-color);">Historial Educativo</h3>
+                    <ol class="edu-ol">
+                        <li>
+                            <div>
+                                <strong>Técnico en Programación</strong>
+                                <span>Fundamentos sólidos en bases de datos y desarrollo orientado a objetos.</span>
+                            </div>
+                        </li>
+                        <li>
+                            <div>
+                                <strong>Ingeniería en Sistemas Electrónicos Inteligentes</strong>
+                                <span>8º semestre — Especialización en Automatización Industrial y Machine Learning.</span>
+                            </div>
+                        </li>
+                        <li>
+                            <div>
+                                <strong>Proyectos de Integración</strong>
+                                <span>Desarrollo de sistemas embebidos, apps Android y control de procesos.</span>
+                            </div>
+                        </li>
+                    </ol>
+                </div>
+
+                <div class="timeline">
+                    <div class="card experience-item">
+                        <span class="date-badge">Actualidad</span>
+                        <h3>Ingeniería en Sistemas Electrónicos Inteligentes</h3>
+                        <p>Especialización en Automatización Industrial y Machine Learning.</p>
+                    </div>
+                    <div class="card experience-item">
+                        <span class="date-badge">Técnico</span>
+                        <h3>Programación</h3>
+                        <p>Fundamentos sólidos en bases de datos y desarrollo de software orientado a objetos.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="skills" class="section-block">
+            <div class="container">
+                <h2 class="section-title">Habilidades Técnicas</h2>
+                <div class="skills-grid">
+                    <div class="card skill-category">
+                        <h3>Sistemas & Control</h3>
+                        <p>C, C++, Java, PLCs y control de procesos industriales.</p>
+                    </div>
+                    <div class="card skill-category">
+                        <h3>Desarrollo & IA</h3>
+                        <p>Android Nativo, Python, Fundamentos de Machine Learning.</p>
+                    </div>
+                    <div class="card skill-category">
+                        <h3>Creatividad</h3>
+                        <p>Diseño Gráfico Publicitario y Animación en After Effects.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="projects" class="section-block">
+            <div class="container">
+                <h2 class="section-title">Proyectos Destacados</h2>
+                <div class="projects-grid">
+                    <article class="card project-item">
+                        <img src="proyecto1.JPG" alt="Control de Automatización" class="img-fluid project-img">
+                        <h3>Control de Automatización</h3>
+                        <p>Optimización de procesos industriales con C++ y PLC.</p>
+                        <div class="project-tags">
+                            <span>PLC</span><span>C++</span>
+                        </div>
+                    </article>
+
+                    <article class="card project-item">
+                        <img src="pro.png" alt="App de Punto de Venta" class="img-fluid project-img">
+                        <h3>App de Punto de Venta</h3>
+                        <p>Aplicación Android nativa con integración de APIs REST.</p>
+                        <div class="project-tags">
+                            <span>Android</span><span>Java</span>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <section id="contact" class="section-block">
+            <div class="container">
+                <div class="contact-wrapper card">
+                    <div class="contact-info">
+                        <h2>¿Trabajamos juntos?</h2>
+                        <p>Estoy disponible para colaborar en proyectos de ingeniería y desarrollo de software de alto impacto.</p>
+                        <br>
+                        <div class="contact-methods">
+                            <div class="method-item">
+                                <svg class="method-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+                                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                                    <circle cx="12" cy="10" r="3"></circle>
+                                </svg>
+                                <div>
+                                    <h4>Ubicación</h4>
+                                    <p>Ciudad Juárez, Chihuahua, México</p>
+                                </div>
+                            </div>
+
+                            <div class="method-item">
+                                <svg class="method-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+                                    <rect x="2" y="4" width="20" height="16" rx="2"></rect>
+                                    <path d="M2 6l10 7 10-7"></path>
+                                </svg>
+                                <div>
+                                    <h4>Email</h4>
+                                    <p>sealtielargumedol@gmail.com</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="contact-form-container">
+                        <!-- ✅ ETAPA 1 & 3: Formulario con labels, inputs y validación DOM -->
+                        <form id="contact-form" novalidate>
+                            <div class="form-group">
+                                <label for="contact-name">Nombre Completo</label>
+                                <input id="contact-name" name="name" type="text" placeholder="Ej. Juan Pérez" autocomplete="name">
+                                <span class="field-error" id="error-name">Por favor, ingresa tu nombre completo.</span>
+                            </div>
+                            <div class="form-group">
+                                <label for="contact-email">Correo Electrónico</label>
+                                <input id="contact-email" name="email" type="email" placeholder="tu@email.com" autocomplete="email">
+                                <span class="field-error" id="error-email">Ingresa un correo electrónico válido (ej. nombre@dominio.com).</span>
+                            </div>
+                            <div class="form-group">
+                                <label for="contact-message">Mensaje</label>
+                                <textarea id="contact-message" name="message" rows="4" placeholder="¿En qué puedo ayudarte?"></textarea>
+                                <span class="field-error" id="error-message">Por favor, escribe un mensaje.</span>
+                            </div>
+                            <button type="submit" class="cta-button primary full-width">Enviar Mensaje</button>
+                            <div class="form-success" id="form-success" role="alert">
+                                ✅ ¡Gracias por tu mensaje! Te contactaré pronto.
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2026 Hugo Sealtiel Argumedo Lugo | Diseñado para el Futuro</p>
+        </div>
+    </footer>
+
+    <!-- Botón de modo oscuro -->
+    <button id="theme-toggle" aria-label="Cambiar tema">
+        <svg class="theme-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+        </svg>
+    </button>
+
+    <script>
+    (function() {
+        /* ── 1. DARK / LIGHT THEME TOGGLE ── */
+        const themeToggle = document.getElementById('theme-toggle');
+        const htmlEl = document.documentElement;
+
+        const moonIcon = '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>';
+        const sunIcon  = '<circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>';
+
+        function updateIcon(theme) {
+            const icon = themeToggle.querySelector('.theme-icon');
+            if (icon) icon.innerHTML = theme === 'dark' ? sunIcon : moonIcon;
+        }
+
+        const saved = localStorage.getItem('theme') ||
+                      (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        htmlEl.setAttribute('data-theme', saved);
+        updateIcon(saved);
+
+        themeToggle.addEventListener('click', function () {
+            const next = htmlEl.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+            htmlEl.setAttribute('data-theme', next);
+            localStorage.setItem('theme', next);
+            updateIcon(next);
+        });
+
+        /* ── 2. HAMBURGER MENU ── */
+        const hamburger = document.getElementById('hamburger-btn');
+        const navMenu   = document.getElementById('nav-menu');
+
+        hamburger.addEventListener('click', function () {
+            const isOpen = navMenu.classList.toggle('open');
+            hamburger.classList.toggle('open', isOpen);
+            hamburger.setAttribute('aria-expanded', isOpen);
+            document.body.style.overflow = isOpen ? 'hidden' : '';
+        });
+
+        // Cerrar menú al hacer clic en un enlace
+        navMenu.querySelectorAll('a').forEach(function (link) {
+            link.addEventListener('click', function () {
+                navMenu.classList.remove('open');
+                hamburger.classList.remove('open');
+                hamburger.setAttribute('aria-expanded', 'false');
+                document.body.style.overflow = '';
+            });
+        });
+
+        /* ── 3. FORM VALIDATION (DOM — sin alert) ── */
+        const form        = document.getElementById('contact-form');
+        const nameInput   = document.getElementById('contact-name');
+        const emailInput  = document.getElementById('contact-email');
+        const msgInput    = document.getElementById('contact-message');
+        const errName     = document.getElementById('error-name');
+        const errEmail    = document.getElementById('error-email');
+        const errMsg      = document.getElementById('error-message');
+        const successBox  = document.getElementById('form-success');
+
+        // Email regex básico
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+        function showError(input, errorEl) {
+            input.classList.add('input-error');
+            errorEl.classList.add('visible');
+        }
+
+        function clearError(input, errorEl) {
+            input.classList.remove('input-error');
+            errorEl.classList.remove('visible');
+        }
+
+        // Limpiar error al escribir
+        nameInput.addEventListener('input',  function () { clearError(nameInput,  errName);  });
+        emailInput.addEventListener('input', function () { clearError(emailInput, errEmail); });
+        msgInput.addEventListener('input',   function () { clearError(msgInput,   errMsg);   });
+
+        form.addEventListener('submit', function (e) {
+            e.preventDefault();
+            successBox.classList.remove('visible');
+
+            let valid = true;
+
+            if (nameInput.value.trim() === '') {
+                showError(nameInput, errName);
+                valid = false;
+            } else {
+                clearError(nameInput, errName);
+            }
+
+            if (!emailRegex.test(emailInput.value.trim())) {
+                showError(emailInput, errEmail);
+                valid = false;
+            } else {
+                clearError(emailInput, errEmail);
+            }
+
+            if (msgInput.value.trim() === '') {
+                showError(msgInput, errMsg);
+                valid = false;
+            } else {
+                clearError(msgInput, errMsg);
+            }
+
+            if (valid) {
+                successBox.classList.add('visible');
+                form.reset();
+            }
+        });
+    })();
+    </script>
+</body>
+</html>
